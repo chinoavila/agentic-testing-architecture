@@ -1,0 +1,13 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "bash .ata/hooks/validate-stack.sh",
+        "windows": "powershell -ExecutionPolicy Bypass -NoProfile -File .ata\\hooks\\validate-stack.ps1",
+        "cwd": ".",
+        "timeout": 10
+      }
+    ]
+  }
+}

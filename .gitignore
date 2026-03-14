@@ -1,0 +1,5 @@
+# ─── Reportes generados (EAA / ROA) — ignorar contenido, preservar estructura ─
+reports/execution/*
+reports/analysis/*
+!reports/execution/.gitkeep
+!reports/analysis/.gitkeep

@@ -1,0 +1,130 @@
+# yaml-language-server: $schema=.ata/stack.schema.json
+# STACK.yml — Configuración de herramientas del proyecto ATA
+#
+# Instrucción: completa los campos vacíos con las herramientas reales de tu proyecto.
+# Copilot lee este archivo al activar cualquier agente (/TGA, /EAA, /ROA).
+# Solo declarás las herramientas que estén disponibles en este repositorio.
+# Regla de carga: un campo tool vacío ("") significa que el skill no está activo.
+
+# ─────────────────────────────────────────────
+# Metadatos del proyecto
+# ─────────────────────────────────────────────
+project:
+  name: ""                    # Ej: mi-app
+  language: ""                # Ej: TypeScript | Python | Java | Go
+  platform: ""                # Ej: web | mobile | api | cli
+  base_url_local: ""          # Ej: http://localhost:3000
+  base_url_staging: ""        # Ej: https://staging.miapp.com
+
+# ─────────────────────────────────────────────
+# Nivel 1 — Skills de Generación (TGA)
+# ─────────────────────────────────────────────
+tga_skills:
+
+  unit_testing:
+    tool: ""                  # Ej: jest | vitest | pytest | junit | go test | mocha
+    language: ""              # Ej: TypeScript | Python | Java
+    output_ext: ""            # Ej: .test.ts | .test.py | .java
+    skill_file: ""            # Ej: .ata/skills/jest.skill.md (vacío = usar conocimiento general)
+
+  bdd:
+    tool: ""                  # Ej: cucumber | behave | pytest-bdd | ginkgo
+    language: ""              # Ej: Gherkin
+    output_ext: ""            # Ej: .feature
+    skill_file: ""
+
+  e2e:
+    tool: ""                  # Ej: playwright | cypress | selenium | puppeteer
+    language: ""              # Ej: TypeScript | JavaScript | Python
+    output_ext: ""            # Ej: .spec.ts | .cy.ts | .py
+    skill_file: ""
+
+  performance:
+    tool: ""                  # Ej: k6 | locust | gatling | jmeter
+    language: ""              # Ej: JavaScript | Python | Scala
+    output_ext: ""            # Ej: .js | .py | .scala
+    skill_file: ""
+
+  ai_assisted:
+    tool: ""                  # Ej: codiumai | diffblue | tabnine
+    skill_file: ""
+
+# ─────────────────────────────────────────────
+# Nivel 2 — Skills de Ejecución (EAA)
+# ─────────────────────────────────────────────
+eaa_skills:
+
+  test_runner:
+    tool: ""                  # Ej: playwright | cypress | jest | pytest | mvn | gradle
+    command: ""               # Ej: npx playwright test | pytest | mvn test
+    parallel: false           # true si la herramienta soporta ejecución paralela nativa
+    skill_file: ""
+
+  browser_targets:            # Solo aplica para pruebas de UI/E2E
+    - ""                      # Ej: chromium | firefox | webkit | chrome | edge
+
+  coverage_reporter:
+    tool: ""                  # Ej: istanbul | lcov | jacoco | coverage.py
+    threshold: 80             # Porcentaje mínimo de cobertura requerido
+    skill_file: ""
+
+  performance_runner:
+    tool: ""                  # Ej: k6 | locust | gatling
+    command: ""               # Ej: k6 run | locust -f
+    skill_file: ""
+
+  visual_regression:
+    tool: ""                  # Ej: applitools | percy | chromatic | playwright (visual)
+    skill_file: ""
+
+  ci_integration:
+    platform: ""              # Ej: github-actions | gitlab-ci | jenkins | circleci
+    config_file: ""           # Ej: .github/workflows/tests.yml
+    skill_file: ""
+
+# ─────────────────────────────────────────────
+# Nivel 3 — Skills de Análisis (ROA)
+# ─────────────────────────────────────────────
+roa_skills:
+
+  static_analysis:
+    tool: ""                  # Ej: sonarqube | eslint | pylint | checkstyle | ruff
+    command: ""               # Ej: sonar-scanner | eslint src/ | pylint src/
+    skill_file: ""
+
+  code_review_ai:
+    tool: ""                  # Ej: deepcode | codeclimate | snyk | semgrep
+    skill_file: ""
+
+  defect_tracking:
+    tool: ""                  # Ej: jira | github-issues | linear | kualitee
+    api_base: ""              # URL base de la API (si aplica)
+    skill_file: ""
+
+  log_analysis:
+    tool: ""                  # Ej: datadog | grafana | kibana | sentry | stdout
+    skill_file: ""
+
+# ─────────────────────────────────────────────
+# Convenciones de nombres de archivos
+# ─────────────────────────────────────────────
+naming:
+  test_prefix: ""             # Ej: test_  (vacío = sin prefijo)
+  test_suffix: ""             # Ej: .test | .spec | _test
+  feature_dir: ""             # Ej: tests/e2e/features
+  unit_dir: ""                # Ej: tests/unit | src/__tests__
+  e2e_dir: ""                 # Ej: tests/e2e | e2e | cypress/e2e
+  performance_dir: ""         # Ej: tests/performance | load-tests
+
+# ─────────────────────────────────────────────
+# Entornos de ejecución
+# ─────────────────────────────────────────────
+environments:
+  local:
+    os: ""                    # Ej: windows | linux | macos
+    base_url: ""
+    env_file: ""              # Ej: .env.local
+  ci:
+    os: ""                    # Ej: linux
+    base_url: ""
+    env_file: ""              # Ej: .env.ci

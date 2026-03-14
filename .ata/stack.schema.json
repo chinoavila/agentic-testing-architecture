@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "ata/stack.schema.json",
+  "title": "ATA STACK configuration",
+  "description": "Configuración de herramientas del proyecto para la Arquitectura de Testing Agéntico (ATA).",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "object",
+      "properties": {
+        "name":             { "type": "string" },
+        "language":         { "type": "string", "examples": ["TypeScript", "Python", "Java", "Go"] },
+        "platform":         { "type": "string", "examples": ["web", "mobile", "api", "cli"] },
+        "base_url_local":   { "type": "string", "format": "uri" },
+        "base_url_staging": { "type": "string", "format": "uri" }
+      }
+    },
+    "tga_skills": {
+      "type": "object",
+      "properties": {
+        "unit_testing": { "$ref": "#/$defs/skill_with_lang" },
+        "bdd":          { "$ref": "#/$defs/skill_with_lang" },
+        "e2e":          { "$ref": "#/$defs/skill_with_lang" },
+        "performance":  { "$ref": "#/$defs/skill_with_lang" },
+        "ai_assisted":  { "$ref": "#/$defs/skill_base" }
+      }
+    },
+    "eaa_skills": {
+      "type": "object",
+      "properties": {
+        "test_runner": {
+          "allOf": [{ "$ref": "#/$defs/skill_base" }],
+          "properties": {
+            "command":  { "type": "string" },
+            "parallel": { "type": "boolean", "default": false }
+          }
+        },
+        "browser_targets": {
+          "type": "array",
+          "items": { "type": "string", "examples": ["chromium", "firefox", "webkit", "chrome", "edge"] }
+        },
+        "coverage_reporter": {
+          "allOf": [{ "$ref": "#/$defs/skill_base" }],
+          "properties": {
+            "threshold": { "type": "number", "minimum": 0, "maximum": 100, "default": 80 }
+          }
+        },
+        "performance_runner": {
+          "allOf": [{ "$ref": "#/$defs/skill_base" }],
+          "properties": { "command": { "type": "string" } }
+        },
+        "visual_regression": { "$ref": "#/$defs/skill_base" },
+        "ci_integration": {
+          "allOf": [{ "$ref": "#/$defs/skill_base" }],
+          "properties": {
+            "platform":    { "type": "string", "examples": ["github-actions", "gitlab-ci", "jenkins", "circleci"] },
+            "config_file": { "type": "string" }
+          }
+        }
+      }
+    },
+    "roa_skills": {
+      "type": "object",
+      "properties": {
+        "static_analysis": {
+          "allOf": [{ "$ref": "#/$defs/skill_base" }],
+          "properties": { "command": { "type": "string" } }
+        },
+        "code_review_ai":  { "$ref": "#/$defs/skill_base" },
+        "defect_tracking": {
+          "allOf": [{ "$ref": "#/$defs/skill_base" }],
+          "properties": { "api_base": { "type": "string", "format": "uri" } }
+        },
+        "log_analysis":    { "$ref": "#/$defs/skill_base" }
+      }
+    },
+    "naming": {
+      "type": "object",
+      "properties": {
+        "test_prefix":     { "type": "string" },
+        "test_suffix":     { "type": "string", "examples": [".test", ".spec", "_test"] },
+        "feature_dir":     { "type": "string" },
+        "unit_dir":        { "type": "string" },
+        "e2e_dir":         { "type": "string" },
+        "performance_dir": { "type": "string" }
+      }
+    },
+    "environments": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "os":       { "type": "string", "examples": ["windows", "linux", "macos"] },
+          "base_url": { "type": "string", "format": "uri" },
+          "env_file": { "type": "string" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "skill_base": {
+      "type": "object",
+      "properties": {
+        "tool":       { "type": "string" },
+        "skill_file": { "type": "string" }
+      }
+    },
+    "skill_with_lang": {
+      "allOf": [{ "$ref": "#/$defs/skill_base" }],
+      "properties": {
+        "language":   { "type": "string" },
+        "output_ext": { "type": "string" }
+      }
+    }
+  }
+}
