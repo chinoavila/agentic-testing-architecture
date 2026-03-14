@@ -12,6 +12,10 @@ Los agentes se invocan mediante prefijos de comando directamente desde el chat d
 # 1. Completar STACK.yml o activar el asistente de configuración
 @ATA Stack Setup  ←  desde el selector de agentes del chat
 
+# Opción A — Ciclo CCV completo automático (recomendado)
+/ORC Como usuario registrado, quiero iniciar sesión con email y contraseña.
+
+# Opción B — Flujo manual paso a paso (mayor control por fase)
 # 2. Generar casos de prueba desde un requisito
 /TGA Como usuario registrado, quiero iniciar sesión con email y contraseña.
 
@@ -45,6 +49,7 @@ Los agentes se invocan mediante prefijos de comando directamente desde el chat d
 │   ├── copilot-instructions.md         ← Orquestador Pasivo: reglas universales
 │   ├── agents/                         ← Definiciones de agentes (path nativo VS Code)
 │   │   ├── stack-setup.agent.md
+│   │   ├── orca.agent.md               ← orquestador: CCV automático end-to-end
 │   │   ├── tga.agent.md
 │   │   ├── eaa.agent.md
 │   │   └── roa.agent.md
@@ -64,7 +69,7 @@ Los agentes se invocan mediante prefijos de comando directamente desde el chat d
 │   │   └── .gitkeep
 │   └── hooks/                          ← Scripts ejecutados por los hooks
 │       ├── validate-stack.ps1/.sh      ← Advisory (workspace)
-│       └── require-stack.ps1/.sh       ← Bloqueante (agent-scoped en TGA/EAA/ROA)
+│       └── require-stack.ps1/.sh      ← Bloqueante (agent-scoped en ORCA/TGA/EAA/ROA)
 ├── tests/                              ← Tests generados por TGA (rastreados en git)
 │   ├── unit/.gitkeep
 │   ├── e2e/.gitkeep

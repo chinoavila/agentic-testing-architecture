@@ -8,6 +8,7 @@ acotadas. Se activan desde el selector de agentes del chat o escribiendo el pref
 | Agente | Prefijo / Activación | Patrón interno | Responsabilidad |
 |--------|---------------------|----------------|------------------|
 | **ATA Stack Setup** | Selector de agentes / hook automático | Entrevista conversacional | Entrevista al desarrollador para completar STACK.yml interactivamente |
+| **ORCA** | `/ORC` | Sequential + Bifurcación condicional | Orquesta el CCV completo (TGA → EAA → ROA condicional) en una única sesión |
 | **TGA** | `/TGA` | Reflection (Generator-Critic) | Transforma requisitos en artefactos de prueba ejecutables |
 | **EAA** | `/EAA` | Parallel Fan-Out + Synthesis | Ejecuta suites en múltiples entornos y produce reportes normalizados |
 | **ROA** | `/ROA` | Reflexive Metacognitive + Ensemble | Diagnostica causas raíz y emite recomendaciones accionables |
@@ -45,6 +46,28 @@ Ningún agente puede asumir el resultado de una sesión anterior sin que dicho a
 
 **Límite de convergencia:** el CCV se detiene automáticamente tras 5 ciclos sin reducción de fallos y escala el historial completo al equipo de desarrollo.
 
+### ORCA: modo orquestado (CCV automático)
+
+El agente **ORCA** (`/ORC`) ejecuta todo el diagrama anterior en una única sesión sin intervención del usuario entre fases. La bifurcación hacia ROA es **condicional**: solo se activa si EAA reportó `failed > 0` o `flaky > 0`.
+
+```mermaid
+flowchart TD
+    START(["Requisito recibido"]) --> TGA
+    TGA["Fase 1 — TGA\nGenera artefactos"] --> EAA
+    EAA["Fase 2 — EAA\nEjecuta y reporta"] --> BIF{"¿failed > 0\no flaky > 0?"}
+    BIF -->|No| OK(["CCV completado ✓"])
+    BIF -->|Sí| ROA
+    ROA["Fase 3 — ROA\nDiagnostica"] --> DEC{"Action\nRequired"}
+    DEC -->|TGA| LOOP["¿Ciclo < max_iterations?"]
+    DEC -->|EAA| EAA
+    DEC -->|HUMAN_REVIEW| ESC(["Escalar a humano"])
+    DEC -->|NONE| OK2(["CCV completado con recomendaciones"])
+    LOOP -->|Sí| TGA
+    LOOP -->|No| ESC
+```
+
+> Para invocar ORCA: `/ORC <descripción del requisito o suite a validar>`
+
 ---
 
 ## Patrones Arquitectónicos Implementados
@@ -53,7 +76,8 @@ La suite combina patrones de los tres marcos de referencia principales en arquit
 
 | Patrón | Aplicación en ATA |
 |--------|-------------------|
-| **Sequential** | Flujo TGA → EAA → ROA (orden fijo, salida es input del siguiente) |
+| **Sequential + Bifurcación condicional** | Orquestación ORCA: TGA → EAA → ROA solo si hay fallos |
+| **Sequential** | Flujo manual TGA → EAA → ROA (orden fijo, salida es input del siguiente) |
 | **Parallel Fan-Out + Synthesis** | EAA ejecuta en chromium / firefox / webkit simultáneamente |
 | **Reflection (Generator-Critic)** | TGA auto-valida cobertura ≥ 80 % antes de entregar artefactos |
 | **Iterative Refinement** | Loop interno de TGA: máx. 3 iteraciones con condición de salida explícita |

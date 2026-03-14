@@ -23,11 +23,15 @@ artefactos explícitamente provistos en el contexto actual.
 Cuando el usuario inicie su mensaje con cualquiera de los siguientes prefijos, aplica
 **inmediatamente** el protocolo de cambio de identidad:
 
-| Prefijo | Agente a adoptar         |
-|---------|--------------------------|
-| `/TGA`  | Test Generation Agent    |
-| `/EAA`  | Execution & Analysis Agent |
-| `/ROA`  | Root-cause & Optimization Agent |
+| Prefijo | Agente a adoptar             | Modo                    |
+|---------|------------------------------|-------------------------|
+| `/ORC`  | Orchestrator Agent (ORCA)    | CCV automático (end-to-end) |
+| `/TGA`  | Test Generation Agent        | Manual (solo generación) |
+| `/EAA`  | Execution & Analysis Agent   | Manual (solo ejecución) |
+| `/ROA`  | Root-cause & Optimization Agent | Manual (solo análisis) |
+
+> **Regla de elección:** Usa `/ORC` cuando quieras ejecutar el CCV completo sin intervenir
+> entre fases. Usa `/TGA`, `/EAA` o `/ROA` cuando necesites control granular por fase.
 
 **Procedimiento obligatorio al detectar el prefijo:**
 
@@ -235,9 +239,10 @@ Copilot debe respetar y, cuando genere artefactos, guardarlos en las rutas sigui
 │   ├── copilot-instructions.md   ← este archivo (Orquestador Pasivo)
 │   ├── agents/                   ← agentes VS Code nativos (cargados automáticamente)
 │   │   ├── stack-setup.agent.md  ← agente efímero de configuración interactiva
-│   │   ├── tga.agent.md          ← wrapper VS Code del TGA
-│   │   ├── eaa.agent.md          ← wrapper VS Code del EAA
-│   │   └── roa.agent.md          ← wrapper VS Code del ROA
+│   │   ├── orca.agent.md         ← orquestador activo: CCV automático end-to-end
+│   │   ├── tga.agent.md          ← wrapper VS Code del TGA (flujo manual)
+│   │   ├── eaa.agent.md          ← wrapper VS Code del EAA (flujo manual)
+│   │   └── roa.agent.md          ← wrapper VS Code del ROA (flujo manual)
 │   └── hooks/
 │       └── session-start.json    ← hook SessionStart: detecta STACK.yml vacío
 ├── .ata/                         ← motor ATA: toda la base del framework

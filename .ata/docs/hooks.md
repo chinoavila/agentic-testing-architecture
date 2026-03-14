@@ -67,11 +67,11 @@ ATA implementa dos capas complementarias de hooks con comportamientos distintos:
 ### Capa 2 — Agent-scoped hooks (bloqueantes)
 
 **Scripts:** `.ata/hooks/require-stack.ps1` / `.ata/hooks/require-stack.sh`
-**Alcance:** Declarados en el frontmatter `hooks` de **TGA**, **EAA** y **ROA** exclusivamente.
+**Alcance:** Declarados en el frontmatter `hooks` de **ORCA**, **TGA**, **EAA** y **ROA**.
 **Comportamiento:** Si `STACK.yml` tiene campos vacíos, retorna `continue: false`, deteniendo la sesión del agente con un `stopReason` claro que indica al usuario activar `@ATA Stack Setup`.
 
 ```yaml
-# Ejemplo del frontmatter en tga.agent.md / eaa.agent.md / roa.agent.md
+# Ejemplo del frontmatter en orca.agent.md / tga.agent.md / eaa.agent.md / roa.agent.md
 hooks:
   SessionStart:
     - type: command
@@ -99,7 +99,7 @@ flowchart TD
     + additionalContext"]
     D -->|No| F([Sesión normal])
     E --> G{"¿Agente activo es
-    TGA / EAA / ROA?"}
+    ORCA / TGA / EAA / ROA?"}
     G -->|Sí| H["Agent-scoped SessionStart hook
     require-stack.ps1 / .sh"]
     H --> I["continue: false + stopReason instructivo"]
@@ -110,7 +110,9 @@ flowchart TD
     K --> L["Entrevista conversacional
     una pregunta por turno"]
     L --> M[STACK.yml actualizado]
-    M --> N(["Handoff: Generar primeros tests → TGA"])
+    M --> N(["Handoffs disponibles:
+    → CCV automático (ORCA)
+    → Solo generar tests (TGA)"])
 ```
 
 ---

@@ -62,7 +62,7 @@ Stack resuelto: vitest · playwright · k6
 
 ### Habilitar hooks en VS Code
 
-Los agent-scoped hooks (que bloquean TGA/EAA/ROA si `STACK.yml` está incompleto) requieren activar la siguiente configuración en VS Code:
+Los agent-scoped hooks (que bloquean ORCA/TGA/EAA/ROA si `STACK.yml` está incompleto) requieren activar la siguiente configuración en VS Code:
 
 ```json
 // .vscode/settings.json
@@ -83,14 +83,15 @@ Los agent-scoped hooks (que bloquean TGA/EAA/ROA si `STACK.yml` está incompleto
 | `.ata/AGENTS.md` | Registro de protocolos — Role, Trigger, Inputs, Outputs, Handoff Protocol por agente | No |
 | `STACK.yml` | Herramientas declaradas del proyecto — resueltas en tiempo de ejecución | **Sí** |
 | `.github/agents/stack-setup.agent.md` | Agente efímero de configuración interactiva | No |
-| `.github/agents/tga.agent.md` | Definición VS Code del TGA (wrapper del protocolo en `.ata/AGENTS.md`) | No |
-| `.github/agents/eaa.agent.md` | Definición VS Code del EAA | No |
-| `.github/agents/roa.agent.md` | Definición VS Code del ROA | No |
+| `.github/agents/orca.agent.md` | Orchestrator Agent — CCV automático end-to-end (`/ORC`) | No |
+| `.github/agents/tga.agent.md` | Definición VS Code del TGA — flujo manual (`/TGA`) | No |
+| `.github/agents/eaa.agent.md` | Definición VS Code del EAA — flujo manual (`/EAA`) | No |
+| `.github/agents/roa.agent.md` | Definición VS Code del ROA — flujo manual (`/ROA`) | No |
 | `.github/hooks/session-start.json` | Hook workspace SessionStart — advisory (`systemMessage` + `additionalContext`) | No |
 | `.ata/hooks/validate-stack.ps1` | Script advisory para el hook de workspace (Windows) | No |
 | `.ata/hooks/validate-stack.sh` | Script advisory para el hook de workspace (Linux/macOS) | No |
-| `.ata/hooks/require-stack.ps1` | Script bloqueante para agent-scoped hooks de TGA/EAA/ROA (Windows) | No |
-| `.ata/hooks/require-stack.sh` | Script bloqueante para agent-scoped hooks de TGA/EAA/ROA (Linux/macOS) | No |
+| `.ata/hooks/require-stack.ps1` | Script bloqueante para agent-scoped hooks de ORCA/TGA/EAA/ROA (Windows) | No |
+| `.ata/hooks/require-stack.sh` | Script bloqueante para agent-scoped hooks de ORCA/TGA/EAA/ROA (Linux/macOS) | No |
 | `.ata/skills/<tool>/SKILL.md` | Instrucciones especializadas por herramienta, una por directorio (carga bajo demanda) | Opcional |
 
 > Los agentes leen `STACK.yml` en cada sesión. El único estado persistente entre sesiones son los artefactos escritos en `/tests/` y `/reports/`.

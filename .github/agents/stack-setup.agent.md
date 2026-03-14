@@ -6,9 +6,13 @@ tools:
   - codebase
   - editFiles
 handoffs:
-  - label: "Generar primeros tests → TGA"
+  - label: "Validar end-to-end con CCV completo → ORCA"
+    agent: orca
+    prompt: "STACK.yml está configurado. Lee el archivo y orquestá el Ciclo Cerrado de Validación completo (TGA → EAA → ROA condicional) para el módulo más relevante del proyecto."
+    send: false
+  - label: "Solo generar tests → TGA"
     agent: tga
-    prompt: "El stack ya está configurado en STACK.yml. Lee el archivo y genera los primeros casos de prueba para el módulo más relevante del proyecto."
+    prompt: "STACK.yml está configurado. Lee el archivo y generá los primeros casos de prueba para el módulo más relevante del proyecto."
     send: false
 ---
 

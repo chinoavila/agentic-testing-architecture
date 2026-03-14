@@ -149,12 +149,13 @@ handoffs:
 
 ---
 
-## Custom Agents en ATA: TGA, EAA y ROA
+## Custom Agents en ATA: ORCA, TGA, EAA y ROA
 
-Los tres agentes del framework ATA están implementados como Custom Agents en `.github/agents/`:
+Los cuatro agentes del framework ATA están implementados como Custom Agents en `.github/agents/`:
 
 | Archivo | Agente | Rol |
 |---------|--------|-----|
+| `orca.agent.md` | Orchestrator Agent | Orquesta el CCV completo (TGA → EAA → ROA condicional) en una única sesión |
 | `tga.agent.md` | Test Generation Agent | Diseña y genera casos de prueba ejecutables |
 | `eaa.agent.md` | Execution & Analysis Agent | Ejecuta suites y produce reportes JSON normalizados |
 | `roa.agent.md` | Root-cause & Optimization Agent | Diagnostica causas raíz y genera recomendaciones |
@@ -163,7 +164,7 @@ Los tres agentes del framework ATA están implementados como Custom Agents en `.
 Todos comparten las siguientes convenciones:
 
 - Frontmatter declara `tools` con el conjunto mínimo necesario (principio de mínimo privilegio).
-- TGA, EAA y ROA incluyen `hooks.SessionStart` apuntando a `require-stack.ps1/.sh` (bloquea si STACK.yml no está configurado).
+- ORCA, TGA, EAA y ROA incluyen `hooks.SessionStart` apuntando a `require-stack.ps1/.sh` (bloquea si STACK.yml no está configurado).
 - `stack-setup.agent.md` **no** tiene hook bloqueante para poder operar cuando STACK.yml está vacío.
 
 El flujo completo de activación —desde el hook bloqueante hasta la carga de la skill— está documentado en [hooks.md](hooks.md) y [skills.md](skills.md).
