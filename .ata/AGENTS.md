@@ -10,6 +10,7 @@
 
 | ID   | Nombre completo                  | Prefijo de activación | Fase ATA                   |
 |------|----------------------------------|-----------------------|----------------------------|
+| SSU  | ATA Stack Setup Agent            | Selector de agentes   | Bootstrap de Stack/Skills  |
 | ORCA | Orchestrator Agent               | `/ORC`                | CCV completo (orquestación) |
 | TGA  | Test Generation Agent            | `/TGA`                | Diseño / Generación        |
 | EAA  | Execution & Analysis Agent       | `/EAA`                | Ejecución / Análisis       |
@@ -18,6 +19,30 @@
 > **Cuándo usar cada modo:**
 > - **`/ORC`** — flujo automatizado end-to-end (CCV completo en una sesión, con lógica condicional).
 > - **`/TGA` / `/EAA` / `/ROA`** — flujo manual paso a paso (mayor control por fase).
+
+---
+
+## Agente ATA Stack Setup — Bootstrap de Stack y Skills
+
+### Rol y prioridad arquitectónica
+
+ATA Stack Setup es el agente de arranque del framework. Su responsabilidad no se limita a
+completar `STACK.yml`: debe garantizar que el stack quede operativo con sus skills asociadas,
+de forma consistente para minimizar saturación de contexto en sesiones posteriores.
+
+En esta arquitectura, **ATA Stack Setup** y **ORCA** se consideran el aporte diferencial del
+proyecto y ocupan el nivel jerárquico superior de control.
+
+### Responsabilidades obligatorias
+
+1. Completar los campos vacíos de `STACK.yml` a través de Fast-Path o entrevista guiada.
+2. Crear o actualizar referencias `skill_file` para cada herramienta configurada.
+3. Crear skills de herramienta **siempre**, incluso si el usuario no lo solicita explícitamente.
+4. Si hay runtime/orquestación de contenedores declarados, crear también skills para:
+  - `docker`/`podman` (runtime)
+  - `docker compose`/`docker-compose`/`podman-compose` (compose)
+  - `kubectl`/`helm`/`kustomize` (k8s)
+5. Mantener trazabilidad entre `tool` y `skill_file` para permitir carga progresiva controlada.
 
 ---
 

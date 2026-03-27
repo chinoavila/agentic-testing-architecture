@@ -177,8 +177,16 @@ Al recibir confirmación:
 1. Usa las herramientas de edición para actualizar cada campo en `STACK.yml`.
    - Reemplaza `tool: ""` por `tool: "<valor confirmado>"` para cada área.
    - Si el usuario eligió "no" / "ninguno", deja el campo vacío (no borres la línea).
-2. Confirma: `✓ STACK.yml actualizado correctamente.`
-3. Declara el cierre de la sesión:
+2. Crear/actualizar skills obligatorias por cada herramienta configurada:
+  - Si un `tool` queda configurado y su `skill_file` está vacío, asignar una ruta en `.ata/skills/<tool>/SKILL.md`.
+  - Crear el archivo `SKILL.md` con frontmatter mínimo (`name`, `description`) y guía breve de uso.
+3. Si hay herramientas de `container_skills` configuradas, crear también sus skills:
+  - runtime: `docker`/`podman`
+  - compose: `docker compose`/`docker-compose`/`podman-compose`
+  - kubernetes: `kubectl`/`helm`/`kustomize`
+4. Confirma: `✓ STACK.yml y skills actualizados correctamente.`
+5. Declara el cierre de la sesión:
+## Reglas de Comportamiento
    ```
    [ATA Stack Setup] Configuración completada. Sesión efímera cerrada.
    Podés usar el botón "Generar primeros tests → TGA" para continuar el flujo ATA.
@@ -196,6 +204,7 @@ Al recibir confirmación:
   o vitest como primera opción. Si es Python, sugiere pytest. Si es Java, junit.
 - **No obligatorio** — si el desarrollador escribe "no" o "ninguno", respeta la decisión
   y avanza a la siguiente pregunta sin insistir.
-- **Solo escribe en STACK.yml** — no modifiques ningún otro archivo.
+- **Escritura permitida para bootstrap completo** — además de `STACK.yml`, este agente puede crear/actualizar
+  archivos de skill en `.ata/skills/<tool>/SKILL.md` cuando sean necesarios para mantener coherencia stack-skill.
 - **No ejecutes comandos** — este agente no tiene acceso a la terminal.
 - **100% en español** — mantén la entrevista en español rioplatense natural.

@@ -7,23 +7,43 @@ acotadas. Se activan desde el selector de agentes del chat o escribiendo el pref
 
 | Agente | Prefijo / Activación | Patrón interno | Responsabilidad |
 |--------|---------------------|----------------|------------------|
-| **ATA Stack Setup** | Selector de agentes / hook automático | Entrevista conversacional | Entrevista al desarrollador para completar STACK.yml interactivamente |
+| **ATA Stack Setup** | Selector de agentes / hook automático | Entrevista conversacional + Bootstrap | Configura `STACK.yml` y crea skills obligatorias por herramienta |
 | **ORCA** | `/ORC` | Sequential + Bifurcación condicional | Orquesta el CCV completo (TGA → EAA → ROA condicional) en una única sesión |
 | **TGA** | `/TGA` | Reflection (Generator-Critic) | Transforma requisitos en artefactos de prueba ejecutables |
 | **EAA** | `/EAA` | Parallel Fan-Out + Synthesis | Ejecuta suites en múltiples entornos y produce reportes normalizados |
 | **ROA** | `/ROA` | Reflexive Metacognitive + Ensemble | Diagnostica causas raíz y emite recomendaciones accionables |
 
+### Jerarquía de control (aporte ATA)
+
+En ATA, `ATA Stack Setup` y `ORCA` son la capa jerárquica superior: el primero habilita stack + skills,
+y el segundo gobierna la ejecución CCV end-to-end.
+
+```mermaid
+flowchart TD
+    SSU["ATA Stack Setup
+    Bootstrap de Stack + Skills"] --> ORCA["ORCA
+    Orquestación CCV"]
+    ORCA --> TGA["TGA
+    Generación"]
+    ORCA --> EAA["EAA
+    Ejecución"]
+    ORCA --> ROA["ROA
+    Optimización"]
+```
+
 ### Resolución de herramientas por agente
 
 Las herramientas concretas se resuelven en tiempo de ejecución desde `STACK.yml`. La tabla siguiente muestra **qué sección de STACK.yml** consume cada agente:
 
-| Sección de STACK.yml | TGA | EAA | ROA |
-|---------------------|:---:|:---:|:---:|
-| `tga_skills.*` (unit, bdd, e2e, performance, ai_assisted) | ✓ | — | — |
-| `eaa_skills.test_runner` + `browser_targets` | — | ✓ | — |
-| `eaa_skills.coverage_reporter` + `performance_runner` | — | ✓ | — |
-| `roa_skills.static_analysis` + `code_review_ai` | — | — | ✓ |
-| `roa_skills.defect_tracking` + `log_analysis` | — | — | ✓ |
+| Sección de STACK.yml | Stack Setup | ORCA | TGA | EAA | ROA |
+|---------------------|:-----------:|:----:|:---:|:---:|:---:|
+| `tga_skills.*` (unit, bdd, e2e, performance, ai_assisted) | ✓ | ✓ | ✓ | — | — |
+| `tga_skills.*.skill_file` | ✓ | ✓ | ✓ | — | — |
+| `eaa_skills.test_runner` + `browser_targets` | — | ✓ | — | ✓ | — |
+| `eaa_skills.coverage_reporter` + `performance_runner` | — | ✓ | — | ✓ | — |
+| `roa_skills.static_analysis` + `code_review_ai` | — | ✓ | — | — | ✓ |
+| `roa_skills.defect_tracking` + `log_analysis` | — | ✓ | — | — | ✓ |
+| `container_skills.*` + `skill_file` | ✓ | ✓ | — | ✓ | — |
 
 ---
 
@@ -33,6 +53,8 @@ El flujo de trabajo sigue una secuencia unidireccional con retorno controlado:
 
 ```mermaid
 flowchart TD
+    SSU["@ATA Stack Setup
+    Stack + Skills"] --> TGA
     TGA["/TGA — Genera artefactos"] -->|handoff-tga-id.json| EAA
     EAA["/EAA — Ejecuta y reporta"] -->|report-id.json| ROA
     ROA["/ROA — Diagnostica"] -->|rca-id.md| D{¿Fallos?}
@@ -50,14 +72,24 @@ Ningún agente puede asumir el resultado de una sesión anterior sin que dicho a
 
 El agente **ORCA** (`/ORC`) ejecuta todo el diagrama anterior en una única sesión sin intervención del usuario entre fases. La bifurcación hacia ROA es **condicional**: solo se activa si EAA reportó `failed > 0` o `flaky > 0`.
 
+Esta implementación explicita como capa de control superior a `ATA Stack Setup` + `ORCA`,
+considerado el aporte distintivo del proyecto respecto a la arquitectura base del paper de referencia.
+
 ```mermaid
 flowchart TD
-    START(["Requisito recibido"]) --> TGA
-    TGA["Fase 1 — TGA\nGenera artefactos"] --> EAA
-    EAA["Fase 2 — EAA\nEjecuta y reporta"] --> BIF{"¿failed > 0\no flaky > 0?"}
+    START(["Requisito recibido"]) --> SSU
+    SSU["ATA Stack Setup
+    valida stack + skills"] --> TGA
+    TGA["Fase 1 — TGA
+    Genera artefactos"] --> EAA
+    EAA["Fase 2 — EAA
+    Ejecuta y reporta"] --> BIF{"¿failed > 0
+    o flaky > 0?"}
     BIF -->|No| OK(["CCV completado ✓"])
     BIF -->|Sí| ROA
-    ROA["Fase 3 — ROA\nDiagnostica"] --> DEC{"Action\nRequired"}
+    ROA["Fase 3 — ROA
+    Diagnostica"] --> DEC{"Action
+    Required"}
     DEC -->|TGA| LOOP["¿Ciclo < max_iterations?"]
     DEC -->|EAA| EAA
     DEC -->|HUMAN_REVIEW| ESC(["Escalar a humano"])

@@ -149,9 +149,9 @@ handoffs:
 
 ---
 
-## Custom Agents en ATA: ORCA, TGA, EAA y ROA
+## Custom Agents en ATA: Stack Setup, ORCA, TGA, EAA y ROA
 
-Los cuatro agentes del framework ATA están implementados como Custom Agents en `.github/agents/`:
+Los agentes del framework ATA están implementados como Custom Agents en `.github/agents/`:
 
 | Archivo | Agente | Rol |
 |---------|--------|-----|
@@ -160,6 +160,20 @@ Los cuatro agentes del framework ATA están implementados como Custom Agents en 
 | `eaa.agent.md` | Execution & Analysis Agent | Ejecuta suites y produce reportes JSON normalizados |
 | `roa.agent.md` | Root-cause & Optimization Agent | Diagnostica causas raíz y genera recomendaciones |
 | `stack-setup.agent.md` | ATA Stack Setup | Configura STACK.yml de forma conversacional |
+
+### Jerarquía de control en ATA
+
+- `ATA Stack Setup` es el agente de bootstrap y gobierno de stack/skills.
+- `ORCA` es el agente de orquestación superior del CCV.
+- `TGA`, `EAA` y `ROA` operan como agentes de fase bajo esa jerarquía.
+
+### Responsabilidad explícita de Stack Setup
+
+Además de completar `STACK.yml`, el agente `stack-setup.agent.md` debe:
+
+1. Crear skills para todas las herramientas declaradas.
+2. Crear skills también para runtimes y orquestadores de contenedores declarados (`docker`, `docker compose`, `podman`, etc.).
+3. Mantener `skill_file` no vacío para cada herramienta activa cuando exista skill en `.ata/skills/`.
 
 Todos comparten las siguientes convenciones:
 

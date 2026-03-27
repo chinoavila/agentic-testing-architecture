@@ -170,6 +170,17 @@ El texto después del nombre de la skill se pasa como contexto adicional a la sk
 
 La arquitectura ATA usa skills para implementar el **Progressive Disclosure** de capacidades: el orquestador conoce solo el `name` y `description` de cada skill al inicio de la sesión. Una skill se carga completamente **solo cuando el Domain Agent la invoca** — nunca más de una skill por subdominio al mismo tiempo.
 
+### Política ATA (obligatoria)
+
+En ATA, la creación de skills es obligatoria para toda herramienta declarada en `STACK.yml`.
+Esta tarea corresponde al agente `ATA Stack Setup` durante la configuración inicial o actualización del stack.
+
+También deben crearse skills para herramientas de contenedores/orquestación cuando se declaren:
+
+- runtime: `docker` o `podman`
+- compose: `docker compose`, `docker-compose`, `podman-compose`
+- kubernetes: `kubectl`, `helm`, `kustomize`
+
 La referencia a cada skill se declara en `STACK.yml`:
 
 ```yaml

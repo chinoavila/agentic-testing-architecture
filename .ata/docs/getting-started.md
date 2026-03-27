@@ -5,6 +5,9 @@
 Antes de invocar cualquier agente, completa `STACK.yml` en la raíz del repositorio con las herramientas de tu proyecto. 
 El archivo incluye comentarios inline como guía en cada campo.
 
+ATA Stack Setup debe crear las skills de herramientas de forma obligatoria
+para cada `tool` configurada (incluyendo contenedores y orquestadores si existen).
+
 ### Ejemplo rápido (TypeScript + Playwright + k6)
 
 ```yaml
@@ -27,7 +30,7 @@ tga_skills:
   performance:
     tool: "k6"
     output_ext: ".js"
-    skill_file: ""
+    skill_file: ".ata/skills/k6/SKILL.md"
 
 eaa_skills:
   test_runner:
@@ -48,21 +51,22 @@ container_skills:
   container_runtime:
     tool: "docker"
     command: "docker"
-    skill_file: ""
+    skill_file: ".ata/skills/docker/SKILL.md"
   compose_orchestrator:
     tool: "docker compose"
     command: "docker compose -f docker-compose.yml up -d"
     compose_file: "docker-compose.yml"
-    skill_file: ""
+    skill_file: ".ata/skills/docker-compose/SKILL.md"
   kubernetes_orchestrator:
     tool: "kubectl"
     command: "kubectl apply -f k8s/"
     namespace: "testing"
     manifests_path: "k8s/"
-    skill_file: ""
+    skill_file: ".ata/skills/kubectl/SKILL.md"
 
 naming:
   unit_dir: "src/__tests__"
+  integration_dir: "tests/integration"
   e2e_dir: "tests/e2e"
   performance_dir: "tests/performance"
 ```
@@ -124,6 +128,6 @@ Los agent-scoped hooks (que redirigen ORCA/TGA/EAA/ROA al asistente de configura
 | `.ata/hooks/validate-stack.sh` | Script advisory para el hook de workspace (Linux/macOS) | No |
 | `.ata/hooks/require-stack.ps1` | Script de redirección para agent-scoped hooks de ORCA/TGA/EAA/ROA (Windows): si STACK.yml no tiene herramientas activas, instruye al agente a presentar el handoff **Configurar stack con ATA Stack Setup** en lugar de ejecutar el flujo normal | No |
 | `.ata/hooks/require-stack.sh` | Script de redirección para agent-scoped hooks de ORCA/TGA/EAA/ROA (Linux/macOS): misma lógica que el script .ps1 | No |
-| `.ata/skills/<tool>/SKILL.md` | Instrucciones especializadas por herramienta, una por directorio (carga bajo demanda) | Opcional |
+| `.ata/skills/<tool>/SKILL.md` | Instrucciones especializadas por herramienta, una por directorio (carga bajo demanda) | Sí |
 
 > Los agentes leen `STACK.yml` en cada sesión. El único estado persistente entre sesiones son los artefactos escritos en `/tests/` y `/reports/`.

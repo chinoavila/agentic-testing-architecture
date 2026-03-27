@@ -7,6 +7,11 @@ Los agentes se invocan mediante prefijos de comando directamente desde el chat d
 ATA también puede declarar runtimes y orquestadores de contenedores en `STACK.yml`
 (`container_skills`) para ejecutar suites en entornos Docker, Docker Compose, Podman o Kubernetes.
 
+El aporte principal de esta implementación frente a la propuesta base del paper
+"The Rise of Agentic Testing: Multi-Agent Systems for Robust Software Quality Assurance"
+es la jerarquía explícita de `ATA Stack Setup` (bootstrap de stack + skills) y `ORCA`
+(orquestación CCV end-to-end) como capa de control superior.
+
 ---
 
 ## Inicio rápido
@@ -78,6 +83,7 @@ ATA también puede declarar runtimes y orquestadores de contenedores en `STACK.y
 │       └── require-stack.ps1/.sh      ← Redirección a Stack Setup (agent-scoped en ORCA/TGA/EAA/ROA)
 ├── tests/                              ← Tests generados por TGA (rastreados en git)
 │   ├── unit/.gitkeep
+│   ├── integration/.gitkeep
 │   ├── e2e/.gitkeep
 │   └── performance/.gitkeep
 ├── reports/                            ← Salida de EAA y ROA (ignorada en git)
