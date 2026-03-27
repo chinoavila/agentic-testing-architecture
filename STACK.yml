@@ -83,6 +83,29 @@ eaa_skills:
     skill_file: ""
 
 # ─────────────────────────────────────────────
+# Nivel 2.5 — Contenedores y Orquestación
+# ─────────────────────────────────────────────
+container_skills:
+
+  container_runtime:
+    tool: ""                  # Ej: docker | podman
+    command: ""               # Ej: docker | podman
+    skill_file: ""
+
+  compose_orchestrator:
+    tool: ""                  # Ej: docker-compose | docker compose | podman-compose
+    command: ""               # Ej: docker compose -f docker-compose.yml up -d
+    compose_file: ""          # Ej: docker-compose.yml | compose.yaml
+    skill_file: ""
+
+  kubernetes_orchestrator:
+    tool: ""                  # Ej: kubectl | helm | kustomize
+    command: ""               # Ej: kubectl apply -f k8s/
+    namespace: ""             # Ej: testing | staging
+    manifests_path: ""        # Ej: k8s/ | deploy/k8s/
+    skill_file: ""
+
+# ─────────────────────────────────────────────
 # Nivel 3 — Skills de Análisis (ROA)
 # ─────────────────────────────────────────────
 roa_skills:

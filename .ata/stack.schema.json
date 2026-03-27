@@ -59,6 +59,32 @@
         }
       }
     },
+    "container_skills": {
+      "type": "object",
+      "properties": {
+        "container_runtime": {
+          "allOf": [{ "$ref": "#/$defs/skill_with_command" }],
+          "properties": {
+            "tool": { "type": "string", "examples": ["docker", "podman"] }
+          }
+        },
+        "compose_orchestrator": {
+          "allOf": [{ "$ref": "#/$defs/skill_with_command" }],
+          "properties": {
+            "tool":         { "type": "string", "examples": ["docker-compose", "docker compose", "podman-compose"] },
+            "compose_file": { "type": "string", "examples": ["docker-compose.yml", "compose.yaml"] }
+          }
+        },
+        "kubernetes_orchestrator": {
+          "allOf": [{ "$ref": "#/$defs/skill_with_command" }],
+          "properties": {
+            "tool":           { "type": "string", "examples": ["kubectl", "helm", "kustomize"] },
+            "namespace":      { "type": "string" },
+            "manifests_path": { "type": "string", "examples": ["k8s/", "deploy/k8s/"] }
+          }
+        }
+      }
+    },
     "roa_skills": {
       "type": "object",
       "properties": {
@@ -110,6 +136,12 @@
       "properties": {
         "language":   { "type": "string" },
         "output_ext": { "type": "string" }
+      }
+    },
+    "skill_with_command": {
+      "allOf": [{ "$ref": "#/$defs/skill_base" }],
+      "properties": {
+        "command": { "type": "string" }
       }
     }
   }

@@ -44,11 +44,39 @@ roa_skills:
     command: "npx eslint tests/"
     skill_file: ""
 
+container_skills:
+  container_runtime:
+    tool: "docker"
+    command: "docker"
+    skill_file: ""
+  compose_orchestrator:
+    tool: "docker compose"
+    command: "docker compose -f docker-compose.yml up -d"
+    compose_file: "docker-compose.yml"
+    skill_file: ""
+  kubernetes_orchestrator:
+    tool: "kubectl"
+    command: "kubectl apply -f k8s/"
+    namespace: "testing"
+    manifests_path: "k8s/"
+    skill_file: ""
+
 naming:
   unit_dir: "src/__tests__"
   e2e_dir: "tests/e2e"
   performance_dir: "tests/performance"
 ```
+
+### Soporte de contenedores (Docker/Compose/Podman/Kubernetes)
+
+ATA resuelve estas herramientas desde `STACK.yml → container_skills` para que EAA u ORCA
+puedan ejecutar pruebas sobre ambientes containerizados en lugar del host local.
+
+- `container_runtime.tool`: runtime base (`docker` o `podman`)
+- `compose_orchestrator.tool`: orquestador por Compose (`docker-compose`, `docker compose`, `podman-compose`)
+- `kubernetes_orchestrator.tool`: orquestador para clúster (`kubectl`, `helm`, `kustomize`)
+
+Si no usás contenedores, podés dejar estos campos vacíos sin afectar el flujo ATA clásico.
 
 Al activar un agente, Copilot lee `STACK.yml`, resuelve qué skills cargar y confirma:
 

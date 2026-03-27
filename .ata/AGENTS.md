@@ -188,6 +188,10 @@ por ROA tras una corrección.
   - URL base de la aplicación bajo prueba
   - Targets de ejecución (`browser_targets` para UI, OS para backend)
   - Variables de entorno o archivo `.env` declarado
+- Configuración de contenedores (opcional, leer de `STACK.yml` → `container_skills`):
+  - Runtime (`container_runtime.tool`): docker o podman
+  - Orquestador Compose (`compose_orchestrator.tool`) y archivo `compose_file`
+  - Orquestador Kubernetes (`kubernetes_orchestrator.tool`), `namespace` y `manifests_path`
 - Thresholds de cobertura y rendimiento (`STACK.yml` → `eaa_skills.coverage_reporter.threshold`)
 
 ### Outputs Requeridos
@@ -243,9 +247,15 @@ Cuando todos los casos sean `passed`, el campo `next_agent` debe ser `null`.
 2. Usar `test_runner.command` como comando base de ejecución.
 3. Si `test_runner.parallel == true`, aplicar patrón Fan-Out sobre los targets declarados
    en `browser_targets` (o plataformas equivalentes).
-4. Si `skill_file` no está vacío, leer el archivo de skill antes de ejecutar.
-5. Para regresión visual, usar `visual_regression.tool` solo si está declarado.
-6. **No ejecutar** con herramientas no declaradas en `STACK.yml`.
+4. Si se declara `container_skills.container_runtime.tool`, ejecutar el runner dentro del
+  runtime de contenedores especificado.
+5. Si se declara `container_skills.compose_orchestrator.tool`, priorizar el comando de
+  `compose_orchestrator.command` para preparar o levantar el entorno antes de correr tests.
+6. Si se declara `container_skills.kubernetes_orchestrator.tool`, usar su comando declarado
+  para desplegar/actualizar manifiestos de test y ejecutar la suite sobre el namespace indicado.
+7. Si `skill_file` no está vacío, leer el archivo de skill antes de ejecutar.
+8. Para regresión visual, usar `visual_regression.tool` solo si está declarado.
+9. **No ejecutar** con herramientas no declaradas en `STACK.yml`.
 
 **Herramientas de otros agentes NO permitidas para EAA:** las declaradas en
 `tga_skills` y `roa_skills`. Si se requieren, delegar a TGA o ROA.

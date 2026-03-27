@@ -4,6 +4,9 @@ Propuesta de arquitectura para construcción dinámica de sistema de pruebas de 
 La implementación de referencia opera sobre **GitHub Copilot in Visual Studio Code**, pero la arquitectura es agnóstica respecto al motor de agentes: cualquier plataforma que soporte agentes LLM con instrucciones de sistema, herramientas y handoffs puede adoptar los mismos protocolos sin dependencia de ningún framework específico de construcción de agentes ni de testing.
 Los agentes se invocan mediante prefijos de comando directamente desde el chat del editor y resuelven en tiempo de ejecución las herramientas declaradas por el desarrollador en `STACK.yml`.
 
+ATA también puede declarar runtimes y orquestadores de contenedores en `STACK.yml`
+(`container_skills`) para ejecutar suites en entornos Docker, Docker Compose, Podman o Kubernetes.
+
 ---
 
 ## Inicio rápido
@@ -24,6 +27,9 @@ Los agentes se invocan mediante prefijos de comando directamente desde el chat d
 
 # 4. Analizar los fallos del último reporte
 /ROA Analizar /reports/execution/report-<session_id>.json
+
+# Opción C — Ejecución en contenedores declarados en STACK.yml
+/EAA Ejecutar /tests/e2e/login.spec.ts usando compose_orchestrator.
 ```
 
 ---

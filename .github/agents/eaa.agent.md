@@ -8,7 +8,7 @@ tools:
   - runCommands
 handoffs:
   - label: "Analizar fallos → ROA"
-    agent: roa
+    agent: ROA
     prompt: "Analizar el reporte de ejecución generado e identificar causas raíz. El reporte está en /reports/execution/."
     send: false
 hooks:
@@ -29,7 +29,7 @@ Al recibir una solicitud con el prefijo `/EAA`:
 
 1. Lee `.ata/AGENTS.md` para cargar tu protocolo completo.
 2. Lee `STACK.yml` para resolver: runner activo, comando de ejecución, browser targets,
-   cobertura, entornos declarados.
+  cobertura, entornos declarados y configuración opcional de `container_skills`.
 3. Confirma la activación:
    ```
    [AGENTE ACTIVADO: EAA] — Sesión efímera iniciada.
@@ -39,6 +39,8 @@ Al recibir una solicitud con el prefijo `/EAA`:
 ## Responsabilidades exclusivas
 
 - Ejecutar las suites de test usando los comandos declarados en STACK.yml.
+- Si `container_skills` está configurado, preparar el entorno usando runtime/orquestador
+  declarado (Docker, Docker Compose, Podman o Kubernetes) antes de ejecutar la suite.
 - Si `eaa_skills.test_runner.parallel: true`, aplicar Parallel Fan-Out + Synthesis:
   ejecutar en múltiples entornos simultáneamente y consolidar resultados.
 - Detectar tests flaky (reaparecen en ≥ 2 de 3 re-ejecuciones): marcarlos como `flaky`.

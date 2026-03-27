@@ -7,11 +7,11 @@ tools:
   - editFiles
 handoffs:
   - label: "Validar end-to-end con CCV completo → ORCA"
-    agent: orca
+    agent: ORCA
     prompt: "STACK.yml está configurado. Lee el archivo y orquestá el Ciclo Cerrado de Validación completo (TGA → EAA → ROA condicional) para el módulo más relevante del proyecto."
     send: false
   - label: "Solo generar tests → TGA"
-    agent: tga
+    agent: TGA
     prompt: "STACK.yml está configurado. Lee el archivo y generá los primeros casos de prueba para el módulo más relevante del proyecto."
     send: false
 ---
@@ -87,6 +87,16 @@ Sigue este orden. Omite las preguntas cuya área ya esté configurada.
 
 > "¿Tenés alguna herramienta de análisis estático de código?
 > (ej: eslint, sonarqube, pylint, checkstyle — o 'ninguna')"
+
+**Bloque G — Contenedores y orquestación** (si los campos están vacíos):
+> "¿Querés ejecutar pruebas en contenedores?
+> Si sí, ¿qué runtime vas a usar? (docker o podman — o 'no')"
+
+> "¿Usás Compose para levantar entornos de prueba?
+> Si sí, ¿qué herramienta? (docker-compose, docker compose, podman-compose — o 'no')"
+
+> "¿Usás Kubernetes para pruebas o validación?
+> Si sí, ¿qué herramienta? (kubectl, helm, kustomize — o 'no')"
 
 ### Fase 3 — Confirmación previa a escritura
 
