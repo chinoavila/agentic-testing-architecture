@@ -21,6 +21,35 @@
 
 ---
 
+## Pre-condición Universal: Validación de Stack
+
+**Aplica a todos los agentes (TGA, EAA, ROA, ORCA) antes de ejecutar cualquier flujo.**
+
+Al iniciarse cualquier sesión de agente, el hook `SessionStart` ejecuta `require-stack.ps1/.sh`
+e inyecta un `systemMessage` en el contexto. Cada agente **debe leer ese mensaje antes de actuar**
+y aplicar la siguiente lógica:
+
+| Estado de `STACK.yml` | Comportamiento del agente |
+|-----------------------|--------------------------|
+| **Ninguna herramienta activa** (todos los `tool:` vacíos o archivo no encontrado) | No ejecutar el flujo normal. Informar al usuario y presentar el handoff **"Configurar stack con ATA Stack Setup"** para iniciar la configuración interactiva. No realizar ninguna acción adicional en la sesión. |
+| **Herramientas parcialmente configuradas** (al menos un `tool:` no vacío) | Continuar el flujo normal con las herramientas activas. Sugerir `@ATA Stack Setup` solo si el usuario necesita cubrir los campos restantes. |
+| **Stack completamente configurado** | Continuar el flujo normal sin advertencias. |
+
+### Handoff disponible en todas las sesiones de agente
+
+Todos los agentes (ORCA, TGA, EAA, ROA) exponen el handoff:
+
+```
+label: "Configurar stack con ATA Stack Setup"
+agent: ATA Stack Setup
+send: false
+```
+
+Este handoff debe presentarse **como primera acción** cuando el stack está vacío. No ejecutar
+pasos previos del flujo del agente antes de presentarlo.
+
+---
+
 ## Agente TGA — Test Generation Agent
 
 ### Role & Persona
@@ -55,6 +84,10 @@ Si tras 3 iteraciones no se alcanza el umbral de calidad, marcar el artefacto co
 Activarse cuando el usuario inicie su mensaje con `/TGA` o cuando el contexto requiera
 explícitamente la generación de nuevos casos de prueba desde cero. También se activa cuando ROA
 solicita la regeneración de un caso fallido tras un análisis de causa raíz.
+
+> **Pre-condición:** Antes de ejecutar cualquier paso, verificar el `systemMessage` del hook
+> de sesión. Si indica stack vacío, aplicar la [Pre-condición Universal](#pre-condición-universal-validación-de-stack)
+> y presentar el handoff de configuración.
 
 ### Inputs Esperados
 
@@ -179,6 +212,10 @@ flaky_retry_config:
 Activarse cuando el usuario inicie su mensaje con `/EAA` o cuando TGA entregue un manifiesto de
 handoff señalando a EAA como `next_agent`. También se activa para re-ejecuciones solicitadas
 por ROA tras una corrección.
+
+> **Pre-condición:** Antes de ejecutar cualquier paso, verificar el `systemMessage` del hook
+> de sesión. Si indica stack vacío, aplicar la [Pre-condición Universal](#pre-condición-universal-validación-de-stack)
+> y presentar el handoff de configuración.
 
 ### Inputs Esperados
 
@@ -345,6 +382,10 @@ Activarse cuando el usuario inicie su mensaje con `/ROA` o cuando EAA entregue u
 `"next_agent": "ROA"`. También se activa para auditorías preventivas de calidad del código de
 prueba existente.
 
+> **Pre-condición:** Antes de ejecutar cualquier paso, verificar el `systemMessage` del hook
+> de sesión. Si indica stack vacío, aplicar la [Pre-condición Universal](#pre-condición-universal-validación-de-stack)
+> y presentar el handoff de configuración.
+
 ### Inputs Esperados
 
 - Reporte de ejecución de EAA (`/reports/execution/report-<session_id>.json`)
@@ -510,6 +551,11 @@ loop_config:
 Activarse cuando el usuario inicie su mensaje con `/ORC`. También puede ser invocado
 automáticamente por el handoff del agente `stack-setup` tras completar la configuración
 de `STACK.yml`.
+
+> **Pre-condición:** Antes de iniciar cualquier fase del CCV, verificar el `systemMessage`
+> del hook de sesión. Si indica stack vacío, aplicar la [Pre-condición Universal](#pre-condición-universal-validación-de-stack)
+> y presentar el handoff de configuración. No iniciar ningún ciclo CCV hasta que el stack
+> esté configurado.
 
 ### Inputs Esperados
 

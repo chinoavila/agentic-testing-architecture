@@ -6,6 +6,11 @@ tools:
   - codebase
   - editFiles
   - runCommands
+handoffs:
+  - label: "Configurar stack con ATA Stack Setup"
+    agent: "ATA Stack Setup"
+    prompt: "STACK.yml no tiene herramientas configuradas. Iniciar la entrevista de configuración interactiva para establecer el stack ATA del proyecto antes de ejecutar el CCV."
+    send: false
 hooks:
   SessionStart:
     - type: command
@@ -24,15 +29,32 @@ todas las fases.
 
 ---
 
+## Pre-condición: Validación de Stack
+
+**Ejecutar antes de cualquier otra acción.**
+
+Si el contexto de sistema contiene el aviso `STACK.yml no tiene herramientas activas`
+o `STACK.yml no encontrado` (inyectado por el hook de sesión):
+
+1. **No ejecutes** ningún paso del flujo normal ni del CCV.
+2. Informa al usuario:
+   > "⚠️ **STACK.yml no está configurado** — el CCV no puede iniciarse sin al menos
+   > una herramienta activa. Usá el handoff **'Configurar stack con ATA Stack Setup'**
+   > para completar la configuración de forma interactiva antes de volver a este agente."
+3. Presenta el handoff `Configurar stack con ATA Stack Setup` y esperá la acción del usuario.
+4. No realices ninguna acción adicional en esta sesión.
+
+---
+
 ## Activación
 
 Al recibir una solicitud con el prefijo `/ORC`:
 
 1. Lee `.ata/AGENTS.md` para cargar los protocolos completos de TGA, EAA y ROA.
 2. Lee `STACK.yml` para resolver el stack activo (herramientas, rutas, entornos).
-3. Si algún campo `tool` crítico está vacío en `STACK.yml`, **detener** e indicar:
-   > "STACK.yml tiene campos sin configurar. Activá el agente `@ATA Stack Setup`
-   > desde el selector de agentes antes de continuar con `/ORC`."
+3. Si todos los campos `tool` en `STACK.yml` están vacíos, aplicar la **Pre-condición
+   de Validación de Stack** definida arriba: presentar el handoff `Configurar stack
+   con ATA Stack Setup` y no continuar.
 4. Genera un `session_id` en formato UUID v4 para toda la sesión de orquestación.
 5. Confirma la activación con el encabezado:
 

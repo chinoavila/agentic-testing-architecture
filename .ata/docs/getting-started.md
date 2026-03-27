@@ -85,12 +85,16 @@ Al activar un agente, Copilot lee `STACK.yml`, resuelve qué skills cargar y con
 Stack resuelto: vitest · playwright · k6
 ```
 
-> Si un campo `tool` está vacío, activa el agente **@ATA Stack Setup** desde el selector del chat.
-> Te guiará con una entrevista conversacional para completar `STACK.yml` paso a paso.
+> Si STACK.yml **no tiene ninguna herramienta activa**, los agentes ORCA/TGA/EAA/ROA detectan
+> la condición en el hook de sesión y presentan el handoff **Configurar stack con ATA Stack Setup**
+> para iniciar la configuración interactiva sin necesidad de abrir una nueva sesión.
+> Si STACK.yml tiene **herramientas parcialmente configuradas**, los agentes continúan normalmente
+> con las herramientas activas y sugieren completar la configuración solo si es necesario.
 
 ### Habilitar hooks en VS Code
 
-Los agent-scoped hooks (que bloquean ORCA/TGA/EAA/ROA si `STACK.yml` está incompleto) requieren activar la siguiente configuración en VS Code:
+Los agent-scoped hooks (que redirigen ORCA/TGA/EAA/ROA al asistente de configuración cuando
+`STACK.yml` no tiene herramientas activas) requieren activar la siguiente configuración en VS Code:
 
 ```json
 // .vscode/settings.json
@@ -118,8 +122,8 @@ Los agent-scoped hooks (que bloquean ORCA/TGA/EAA/ROA si `STACK.yml` está incom
 | `.github/hooks/session-start.json` | Hook workspace SessionStart — advisory (`systemMessage` + `additionalContext`) | No |
 | `.ata/hooks/validate-stack.ps1` | Script advisory para el hook de workspace (Windows) | No |
 | `.ata/hooks/validate-stack.sh` | Script advisory para el hook de workspace (Linux/macOS) | No |
-| `.ata/hooks/require-stack.ps1` | Script bloqueante para agent-scoped hooks de ORCA/TGA/EAA/ROA (Windows) | No |
-| `.ata/hooks/require-stack.sh` | Script bloqueante para agent-scoped hooks de ORCA/TGA/EAA/ROA (Linux/macOS) | No |
+| `.ata/hooks/require-stack.ps1` | Script de redirección para agent-scoped hooks de ORCA/TGA/EAA/ROA (Windows): si STACK.yml no tiene herramientas activas, instruye al agente a presentar el handoff **Configurar stack con ATA Stack Setup** en lugar de ejecutar el flujo normal | No |
+| `.ata/hooks/require-stack.sh` | Script de redirección para agent-scoped hooks de ORCA/TGA/EAA/ROA (Linux/macOS): misma lógica que el script .ps1 | No |
 | `.ata/skills/<tool>/SKILL.md` | Instrucciones especializadas por herramienta, una por directorio (carga bajo demanda) | Opcional |
 
 > Los agentes leen `STACK.yml` en cada sesión. El único estado persistente entre sesiones son los artefactos escritos en `/tests/` y `/reports/`.

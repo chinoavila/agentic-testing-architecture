@@ -75,7 +75,7 @@ ATA también puede declarar runtimes y orquestadores de contenedores en `STACK.y
 │   │   └── .gitkeep
 │   └── hooks/                          ← Scripts ejecutados por los hooks
 │       ├── validate-stack.ps1/.sh      ← Advisory (workspace)
-│       └── require-stack.ps1/.sh      ← Bloqueante (agent-scoped en ORCA/TGA/EAA/ROA)
+│       └── require-stack.ps1/.sh      ← Redirección a Stack Setup (agent-scoped en ORCA/TGA/EAA/ROA)
 ├── tests/                              ← Tests generados por TGA (rastreados en git)
 │   ├── unit/.gitkeep
 │   ├── e2e/.gitkeep

@@ -259,8 +259,10 @@ Copilot debe respetar y, cuando genere artefactos, guardarlos en las rutas sigui
 │   │   ├── <tool>.skill.md       ← ej: jest.skill.md, playwright.skill.md
 │   │   └── ...
 │   └── hooks/                    ← scripts de validación de hooks
-│       ├── validate-stack.ps1    ← Windows (PowerShell)
-│       └── validate-stack.sh     ← Linux / macOS (Bash)
+│       ├── validate-stack.ps1    ← Advisory (workspace) — Windows (PowerShell)
+│       ├── validate-stack.sh     ← Advisory (workspace) — Linux / macOS (Bash)
+│       ├── require-stack.ps1     ← Redirección a Stack Setup (agent-scoped) — Windows
+│       └── require-stack.sh      ← Redirección a Stack Setup (agent-scoped) — Linux / macOS
 ├── STACK.yml                      ← configuración de herramientas del proyecto (EDITAR)
 ├── tests/
 │   ├── unit/                     ← ruta sobreescrita por STACK.naming.unit_dir
@@ -284,8 +286,11 @@ Copilot debe respetar y, cuando genere artefactos, guardarlos en las rutas sigui
 |---------|-----------|
 | **ATA** | Arquitectura de Testing Agéntico — sistema de agentes de IA para pruebas de software |
 | **CCV** | Ciclo Cerrado de Validación — flujo obligatorio entre fases de prueba |
+| **ORCA** | Orchestrator Agent — agente que ejecuta el CCV completo de forma autónoma en una sola sesión |
 | **TGA** | Test Generation Agent — agente de diseño y generación de casos de prueba |
 | **EAA** | Execution & Analysis Agent — agente de ejecución y análisis de resultados |
 | **ROA** | Root-cause & Optimization Agent — agente de análisis de causa raíz y mejora |
 | **Handoff** | Transferencia estructurada de artefactos entre agentes (sesiones efímeras) |
 | **Sesión efímera** | Sesión de Copilot con estado aislado, activada por prefijo y descartada al cerrar |
+| **Fast-Path** | Modo de configuración rápida del Stack Setup que extrae valores de stack del prompt inicial sin entrevista |
+| **container_skills** | Sección de `STACK.yml` que declara runtimes y orquestadores de contenedores (Docker, Compose, Kubernetes) para EAA |
