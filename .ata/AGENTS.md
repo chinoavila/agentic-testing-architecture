@@ -192,6 +192,10 @@ por ROA tras una corrección.
   - Runtime (`container_runtime.tool`): docker o podman
   - Orquestador Compose (`compose_orchestrator.tool`) y archivo `compose_file`
   - Orquestador Kubernetes (`kubernetes_orchestrator.tool`), `namespace` y `manifests_path`
+- Si el usuario exige runtime en contenedores, declarar explícitamente dónde se instalarán
+  dependencias (build image o init step dentro del contenedor)
+- Si no existe entorno de contenedores, habilitar modo bootstrap para generar artefactos mínimos:
+  `Dockerfile` + `docker-compose.yml` (o manifiestos Kubernetes si aplica)
 - Thresholds de cobertura y rendimiento (`STACK.yml` → `eaa_skills.coverage_reporter.threshold`)
 
 ### Outputs Requeridos
@@ -253,9 +257,18 @@ Cuando todos los casos sean `passed`, el campo `next_agent` debe ser `null`.
   `compose_orchestrator.command` para preparar o levantar el entorno antes de correr tests.
 6. Si se declara `container_skills.kubernetes_orchestrator.tool`, usar su comando declarado
   para desplegar/actualizar manifiestos de test y ejecutar la suite sobre el namespace indicado.
-7. Si `skill_file` no está vacío, leer el archivo de skill antes de ejecutar.
-8. Para regresión visual, usar `visual_regression.tool` solo si está declarado.
-9. **No ejecutar** con herramientas no declaradas en `STACK.yml`.
+7. Si el usuario indicó ejecución en contenedores, instalar dependencias dentro del contenedor
+   (nunca en el host) usando una de estas estrategias:
+   a. Durante build en `Dockerfile` (`RUN npm ci`, `pip install -r requirements.txt`, etc.).
+   b. Paso de inicialización del servicio de test en Compose/Kubernetes antes del runner.
+8. Si el entorno de contenedores no existe, asistir en su construcción antes de ejecutar:
+   - Generar `Dockerfile` base alineado al lenguaje/herramienta de `STACK.yml`.
+   - Generar `docker-compose.yml` cuando se requiera orquestación local.
+   - Generar manifiestos en `manifests_path` cuando se use Kubernetes.
+   - Validar que el runner pueda ejecutarse en ese entorno recién creado.
+9. Si `skill_file` no está vacío, leer el archivo de skill antes de ejecutar.
+10. Para regresión visual, usar `visual_regression.tool` solo si está declarado.
+11. **No ejecutar** con herramientas no declaradas en `STACK.yml`.
 
 **Herramientas de otros agentes NO permitidas para EAA:** las declaradas en
 `tga_skills` y `roa_skills`. Si se requieren, delegar a TGA o ROA.

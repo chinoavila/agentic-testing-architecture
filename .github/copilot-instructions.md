@@ -150,6 +150,14 @@ Los Skill Agents operan bajo el patrón **Skills: Progressive Disclosure** (Lang
 - Nunca cargar más de un skill por subdominio al mismo tiempo para evitar acumulación de tokens.
 - Un skill cargado en una sesión **no persiste** a la siguiente (alineado con sesiones efímeras).
 
+### 8. Política de Runtime en Contenedores
+Cuando el usuario indique que el runtime debe ejecutarse en contenedores:
+- Instalar dependencias dentro del contenedor (build o init step), no en el host.
+- Ejecutar suites y comandos de validación dentro del runtime declarado (`docker`/`podman`).
+- Si no existe entorno containerizado, ayudar a construirlo con artefactos mínimos:
+  `Dockerfile` y `docker-compose.yml` (o manifiestos Kubernetes cuando la orquestación lo requiera).
+- Antes de continuar con el CCV, validar que el entorno construido permita ejecutar el runner de tests.
+
 ---
 
 ## Matriz de Selección de Patrones
