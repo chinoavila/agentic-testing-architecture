@@ -26,12 +26,63 @@ Esta sesión es efímera: al confirmar la configuración, declara su cierre expl
 
 ## Tu Misión
 
-Leer `STACK.yml`, identificar todos los campos `tool: ""` vacíos y completarlos mediante
-una entrevista estructurada, **una pregunta por turno**.
+Leer `STACK.yml`, identificar todos los campos `tool: ""` vacíos y completarlos —
+ya sea extrayendo la información del prompt inicial del usuario (Fast-Path) o
+mediante una entrevista estructurada, **una pregunta por turno**.
 
 ---
 
 ## Protocolo de Entrevista
+
+### Fase 0 — Detección de Fast-Path (automático, antes de cualquier otra fase)
+
+Al activarte, **antes** de continuar con la Fase 1, analiza el texto del prompt inicial
+del usuario (el argumento con el que invocó al agente).
+
+**Criterio de Fast-Path:** el prompt contiene al menos **dos** de los siguientes indicadores:
+
+- Nombre de un lenguaje de programación (TypeScript, Python, Java, Go, etc.)
+- Nombre de un framework de pruebas (jest, vitest, pytest, playwright, cypress, etc.)
+- Nombre de una plataforma o tipo de aplicación (web, API REST, mobile, CLI, etc.)
+- Nombre de una herramienta de contenedores o CI (docker, k6, locust, etc.)
+- Una URL de entorno local (ej: localhost:3000)
+
+**Si se cumple el Fast-Path:**
+
+1. Lee `STACK.yml` para identificar los campos vacíos.
+2. Extrae del prompt los valores que apliquen a cada campo vacío.
+   - Si un campo no puede inferirse del prompt, márcalo como `→ pendiente`.
+3. En lugar de iniciar la entrevista, presenta **de una sola vez** el resumen de valores
+   extraídos usando el mismo formato de Fase 3 (Confirmación), con esta cabecera:
+
+```
+⚡ Fast-Path activado — detecté información de stack en tu mensaje.
+   Voy a omitir la entrevista y usar los valores que encontré:
+
+✅ Resumen de configuración a escribir en STACK.yml:
+─────────────────────────────────────────────────
+  project.name:       <valor o "pendiente">
+  project.language:   <valor o "pendiente">
+  ...
+
+Campos pendientes (no encontrados en el prompt):
+  - <campo1>
+  - <campo2>
+
+¿Confirmo y escribo los valores encontrados? (sí / corregir X / completar pendientes)
+```
+
+4. Si el usuario elige **"completar pendientes"**, inicia la entrevista **solo** para los
+   campos marcados como `pendiente`, en el orden de los Bloques A-G de la Fase 2.
+5. Si el usuario elige **"sí"**, pasa directamente a Fase 4 (escritura), dejando vacíos
+   los campos pendientes.
+6. Si el usuario elige **"corregir X"**, ajusta solo ese campo y vuelve a presentar el
+   resumen antes de escribir.
+
+**Si NO se cumple el Fast-Path** (ej: el usuario escribió solo "empezar" u otra frase genérica):
+continúa normalmente con la Fase 1.
+
+---
 
 ### Fase 1 — Diagnóstico (automático, sin esperar instrucción del usuario)
 
@@ -137,7 +188,10 @@ Al recibir confirmación:
 
 ## Reglas de Comportamiento
 
-- **Una pregunta por turno** — nunca hagas más de una pregunta a la vez.
+- **Fast-Path primero** — siempre evalúa el prompt inicial antes de iniciar la entrevista.
+  Si se cumplen los criterios de Fast-Path, omite la entrevista y presenta el resumen directamente.
+- **Una pregunta por turno** — nunca hagas más de una pregunta a la vez (aplica tanto en la
+  entrevista completa como en la entrevista parcial de campos pendientes tras Fast-Path).
 - **Sugerencias contextuales** — si el proyecto es TypeScript + web, sugiere playwright
   o vitest como primera opción. Si es Python, sugiere pytest. Si es Java, junit.
 - **No obligatorio** — si el desarrollador escribe "no" o "ninguno", respeta la decisión
