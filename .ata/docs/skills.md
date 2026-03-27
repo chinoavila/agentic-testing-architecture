@@ -54,7 +54,7 @@ flowchart LR
 
 Se pueden agregar ubicaciones adicionales con el setting `chat.agentSkillsLocations`.
 
-> **Convención ATA**: las skills del proyecto se almacenan en `.ata/skills/` y se referencian desde `STACK.yml` via `skill_file`. El directorio `.github/skills/` queda disponible para skills no-ATA del proyecto.
+> **Convención ATA**: las skills del proyecto se almacenan en `.github/skills/` (ruta estándar de VS Code Agent Skills) y se referencian desde `STACK.yml` via `skill_file`.
 
 ---
 
@@ -63,7 +63,7 @@ Se pueden agregar ubicaciones adicionales con el setting `chat.agentSkillsLocati
 Cada skill vive en su propio subdirectorio. El nombre del directorio **debe coincidir** con el campo `name` del frontmatter:
 
 ```
-.ata/skills/
+.github/skills/
 └── playwright/                 # nombre del directorio = name en SKILL.md
     ├── SKILL.md                # requerido
     ├── fixtures/               # recursos opcionales
@@ -188,11 +188,11 @@ tga_skills:
   unit_testing:
     tool: "vitest"
     output_ext: ".test.ts"
-    skill_file: ".ata/skills/vitest/SKILL.md"   # ← ruta a la skill
+    skill_file: ".github/skills/vitest/SKILL.md"   # ← ruta a la skill
   e2e:
     tool: "playwright"
     output_ext: ".spec.ts"
-    skill_file: ".ata/skills/playwright/SKILL.md"
+    skill_file: ".github/skills/playwright/SKILL.md"
 ```
 
 Cuando TGA resuelve el stack al inicio de la sesión:

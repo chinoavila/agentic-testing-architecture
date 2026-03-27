@@ -25,7 +25,7 @@ tga_skills:
     tool: ""                  # Ej: jest | vitest | pytest | junit | go test | mocha
     language: ""              # Ej: TypeScript | Python | Java
     output_ext: ""            # Ej: .test.ts | .test.py | .java
-    skill_file: ""            # Ej: .ata/skills/jest.skill.md (vacío = usar conocimiento general)
+    skill_file: ""            # Ej: .github/skills/jest/SKILL.md (vacío = usar conocimiento general)
 
   bdd:
     tool: ""                  # Ej: cucumber | behave | pytest-bdd | ginkgo

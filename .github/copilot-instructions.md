@@ -39,8 +39,8 @@ Cuando el usuario inicie su mensaje con cualquiera de los siguientes prefijos, a
 2. **Leer `STACK.yml`** en la raíz del repositorio para determinar las herramientas activas.
 3. Localizar la sección correspondiente al agente invocado en `.ata/AGENTS.md`.
 4. Seguir el protocolo de resolución de skills del agente: cargar solo los skills cuyos
-   `tool` estén declarados en `STACK.yml`. Si `skill_file` apunta a un `.md` en `.ata/skills/`,
-   leerlo antes de operar.
+   `tool` estén declarados en `STACK.yml`. Si `skill_file` apunta a un `SKILL.md` en
+   `.github/skills/<tool>/`, leerlo antes de operar.
 5. **Adoptar completamente** la identidad, restricciones y stack resuelto.
 6. **Limitar** todas las respuestas de esta sesión únicamente a las responsabilidades descritas en
    esa sección de `.ata/AGENTS.md`.
@@ -251,13 +251,14 @@ Copilot debe respetar y, cuando genere artefactos, guardarlos en las rutas sigui
 │   │   ├── tga.agent.md          ← wrapper VS Code del TGA (flujo manual)
 │   │   ├── eaa.agent.md          ← wrapper VS Code del EAA (flujo manual)
 │   │   └── roa.agent.md          ← wrapper VS Code del ROA (flujo manual)
+│   ├── skills/                   ← skills VS Code (formato estándar Agent Skills)
+│   │   ├── <tool>/               ← ej: jest/, playwright/, k6/
+│   │   │   └── SKILL.md          ← frontmatter YAML (name, description) + instrucciones
+│   │   └── ...
 │   └── hooks/
 │       └── session-start.json    ← hook SessionStart: detecta STACK.yml vacío
 ├── .ata/                         ← motor ATA: toda la base del framework
 │   ├── AGENTS.md                 ← registro completo de protocolos de agentes
-│   ├── skills/                   ← archivos .md de skills especializados (opcionales)
-│   │   ├── <tool>.skill.md       ← ej: jest.skill.md, playwright.skill.md
-│   │   └── ...
 │   └── hooks/                    ← scripts de validación de hooks
 │       ├── validate-stack.ps1    ← Advisory (workspace) — Windows (PowerShell)
 │       ├── validate-stack.sh     ← Advisory (workspace) — Linux / macOS (Bash)

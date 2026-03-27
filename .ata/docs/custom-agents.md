@@ -173,7 +173,7 @@ Además de completar `STACK.yml`, el agente `stack-setup.agent.md` debe:
 
 1. Crear skills para todas las herramientas declaradas.
 2. Crear skills también para runtimes y orquestadores de contenedores declarados (`docker`, `docker compose`, `podman`, etc.).
-3. Mantener `skill_file` no vacío para cada herramienta activa cuando exista skill en `.ata/skills/`.
+3. Mantener `skill_file` no vacío para cada herramienta activa cuando exista skill en `.github/skills/`.
 
 Todos comparten las siguientes convenciones:
 

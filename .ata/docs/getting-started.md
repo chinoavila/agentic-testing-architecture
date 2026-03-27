@@ -22,15 +22,15 @@ tga_skills:
   unit_testing:
     tool: "vitest"
     output_ext: ".test.ts"
-    skill_file: ".ata/skills/vitest/SKILL.md"
+    skill_file: ".github/skills/vitest/SKILL.md"
   e2e:
     tool: "playwright"
     output_ext: ".spec.ts"
-    skill_file: ".ata/skills/playwright/SKILL.md"
+    skill_file: ".github/skills/playwright/SKILL.md"
   performance:
     tool: "k6"
     output_ext: ".js"
-    skill_file: ".ata/skills/k6/SKILL.md"
+    skill_file: ".github/skills/k6/SKILL.md"
 
 eaa_skills:
   test_runner:
@@ -51,18 +51,18 @@ container_skills:
   container_runtime:
     tool: "docker"
     command: "docker"
-    skill_file: ".ata/skills/docker/SKILL.md"
+    skill_file: ".github/skills/docker/SKILL.md"
   compose_orchestrator:
     tool: "docker compose"
     command: "docker compose -f docker-compose.yml up -d"
     compose_file: "docker-compose.yml"
-    skill_file: ".ata/skills/docker-compose/SKILL.md"
+    skill_file: ".github/skills/docker-compose/SKILL.md"
   kubernetes_orchestrator:
     tool: "kubectl"
     command: "kubectl apply -f k8s/"
     namespace: "testing"
     manifests_path: "k8s/"
-    skill_file: ".ata/skills/kubectl/SKILL.md"
+    skill_file: ".github/skills/kubectl/SKILL.md"
 
 naming:
   unit_dir: "src/__tests__"
@@ -128,6 +128,6 @@ Los agent-scoped hooks (que redirigen ORCA/TGA/EAA/ROA al asistente de configura
 | `.ata/hooks/validate-stack.sh` | Script advisory para el hook de workspace (Linux/macOS) | No |
 | `.ata/hooks/require-stack.ps1` | Script de redirección para agent-scoped hooks de ORCA/TGA/EAA/ROA (Windows): si STACK.yml no tiene herramientas activas, instruye al agente a presentar el handoff **Configurar stack con ATA Stack Setup** en lugar de ejecutar el flujo normal | No |
 | `.ata/hooks/require-stack.sh` | Script de redirección para agent-scoped hooks de ORCA/TGA/EAA/ROA (Linux/macOS): misma lógica que el script .ps1 | No |
-| `.ata/skills/<tool>/SKILL.md` | Instrucciones especializadas por herramienta, una por directorio (carga bajo demanda) | Sí |
+| `.github/skills/<tool>/SKILL.md` | Instrucciones especializadas por herramienta, una por directorio (carga bajo demanda) | Sí |
 
 > Los agentes leen `STACK.yml` en cada sesión. El único estado persistente entre sesiones son los artefactos escritos en `/tests/` y `/reports/`.

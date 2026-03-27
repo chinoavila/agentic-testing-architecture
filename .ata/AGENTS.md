@@ -37,7 +37,8 @@ proyecto y ocupan el nivel jerárquico superior de control.
 
 1. Completar los campos vacíos de `STACK.yml` a través de Fast-Path o entrevista guiada.
 2. Crear o actualizar referencias `skill_file` para cada herramienta configurada.
-3. Crear skills de herramienta **siempre**, incluso si el usuario no lo solicita explícitamente.
+3. Crear skills de herramienta en `.github/skills/<tool>/SKILL.md` (formato VS Code Agent Skills)
+   **siempre**, incluso si el usuario no lo solicita explícitamente.
 4. Si hay runtime/orquestación de contenedores declarados, crear también skills para:
   - `docker`/`podman` (runtime)
   - `docker compose`/`docker-compose`/`podman-compose` (compose)
@@ -159,8 +160,8 @@ generar artefactos.
 
 1. Leer `STACK.yml` → sección `tga_skills`.
 2. Para cada sub-sección con `tool` no vacío:
-   a. Si `skill_file` apunta a un `.md` existente en `.ata/skills/`, leerlo y adoptar
-      sus instrucciones específicas.
+   a. Si `skill_file` apunta a un `SKILL.md` existente en `.github/skills/<tool>/`, leerlo
+      y adoptar sus instrucciones específicas.
    b. Si `skill_file` está vacío, usar conocimiento general de la herramienta y advertir
       que no hay skill especializado cargado.
 3. **No invocar** ninguna herramienta no declarada en `STACK.yml`, aunque sea conocida.
