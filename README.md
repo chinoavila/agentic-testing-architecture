@@ -64,6 +64,8 @@ es la jerarquía explícita de `ATA Stack Setup` (bootstrap de stack + skills) y
 │   │   ├── tga.agent.md
 │   │   ├── eaa.agent.md
 │   │   └── roa.agent.md
+│   ├── skills/                         ← Skills por herramienta (carga bajo demanda)
+│   │   └── .gitkeep
 │   └── hooks/
 │       └── session-start.json          ← Hook SessionStart (advisory)
 ├── .ata/                               ← Componente ATA (tooling autocontenido)
@@ -76,8 +78,6 @@ es la jerarquía explícita de `ATA Stack Setup` (bootstrap de stack + skills) y
 │   │   └── references.md
 │   ├── AGENTS.md                       ← Protocolos completos de agentes
 │   ├── stack.schema.json               ← JSON Schema para STACK.yml
-│   ├── skills/                         ← Skills por herramienta (carga bajo demanda)
-│   │   └── .gitkeep
 │   └── hooks/                          ← Scripts ejecutados por los hooks
 │       ├── validate-stack.ps1/.sh      ← Advisory (workspace)
 │       └── require-stack.ps1/.sh      ← Redirección a Stack Setup (agent-scoped en ORCA/TGA/EAA/ROA)

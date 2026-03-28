@@ -637,3 +637,102 @@ con el mismo `session_id` para trazabilidad.
 
 Si el ciclo termina con `Action Required: TGA`, ORCA puede reiniciar desde la Fase 1
 previa confirmación del usuario, respetando `max_iterations`.
+
+---
+
+## Matriz de Selección de Patrones
+
+Usa esta tabla para elegir el patrón correcto según el tipo de flujo de trabajo:
+
+### Flujos Deterministas (secuencia conocida de antemano)
+
+| Características | Patrón ATA aplicable |
+|-----------------|---------------------|
+| Pasos fijos y ordenados; salida de un agente es entrada del siguiente | **Sequential** (TGA → EAA → ROA) |
+| Subtareas independientes ejecutables simultáneamente | **Parallel** (EAA multi-browser) |
+| Generación iterativa con umbral de calidad definido | **Iterative Refinement** (TGA loop interno, máx. 3 iteraciones) |
+
+### Flujos con Orquestación Dinámica (ruta decidida en tiempo de ejecución)
+
+| Características | Patrón ATA aplicable |
+|-----------------|---------------------|
+| Enrutamiento adaptativo a subagente especializado | **Coordinator/Router** (Orchestrator detecta intent) |
+| Problema ambiguo con descomposición multinivel | **Hierarchical Task Decomposition** (Orchestrator → Domain → Skill) |
+| Razonamiento multi-paso con feedback de herramientas | **ReAct** (Business Agent, ROA con herramientas diagnósticas) |
+
+### Flujos Iterativos (mejoran con ciclos)
+
+| Características | Patrón ATA aplicable |
+|-----------------|---------------------|
+| Generación + validación automática hasta umbral | **Generator-Critic** (TGA autovalidación, EAA flaky-retry) |
+| Acción → observación → ajuste de plan | **ReAct loop** (ROA diagnóstico con evidencia incremental) |
+| Output inicial de baja calidad mejorado con feedback | **Self-Improvement Loop** (ciclo CCV completo) |
+
+### Flujos con Requisitos Especiales
+
+| Características | Patrón ATA aplicable |
+|-----------------|---------------------|
+| Operaciones destructivas (deploy, drop DB, push forzado) | **Human-in-the-Loop + Dry-Run Harness** |
+| Agente con baja confianza en su diagnóstico (<50%) | **Reflexive Metacognitive** (escalar a humano) |
+| Diagnóstico complejo que requiere múltiples perspectivas | **Ensemble** (ROA con múltiples hipótesis paralelas) |
+
+---
+
+## Estructura de Directorios Esperada
+
+Copilot debe respetar y, cuando genere artefactos, guardarlos en las rutas siguientes:
+
+```
+/
+├── .github/
+│   ├── copilot-instructions.md   ← Orquestador Pasivo: reglas universales
+│   ├── agents/                   ← agentes VS Code nativos (cargados automáticamente)
+│   │   ├── stack-setup.agent.md  ← agente efímero de configuración interactiva
+│   │   ├── orca.agent.md         ← orquestador activo: CCV automático end-to-end
+│   │   ├── tga.agent.md          ← wrapper VS Code del TGA (flujo manual)
+│   │   ├── eaa.agent.md          ← wrapper VS Code del EAA (flujo manual)
+│   │   └── roa.agent.md          ← wrapper VS Code del ROA (flujo manual)
+│   ├── skills/                   ← skills VS Code (formato estándar Agent Skills)
+│   │   ├── <tool>/               ← ej: jest/, playwright/, k6/
+│   │   │   └── SKILL.md          ← frontmatter YAML (name, description) + instrucciones
+│   │   └── ...
+│   └── hooks/
+│       └── session-start.json    ← hook SessionStart: detecta STACK.yml vacío
+├── .ata/                         ← motor ATA: toda la base del framework
+│   ├── AGENTS.md                 ← registro completo de protocolos de agentes
+│   └── hooks/                    ← scripts de validación de hooks
+│       ├── validate-stack.ps1    ← Advisory (workspace) — Windows (PowerShell)
+│       ├── validate-stack.sh     ← Advisory (workspace) — Linux / macOS (Bash)
+│       ├── require-stack.ps1     ← Redirección a Stack Setup (agent-scoped) — Windows
+│       └── require-stack.sh      ← Redirección a Stack Setup (agent-scoped) — Linux / macOS
+├── STACK.yml                      ← configuración de herramientas del proyecto (EDITAR)
+├── tests/
+│   ├── unit/                     ← ruta sobreescrita por STACK.naming.unit_dir
+│   ├── e2e/                      ← ruta sobreescrita por STACK.naming.e2e_dir
+│   └── performance/              ← ruta sobreescrita por STACK.naming.performance_dir
+├── reports/
+│   ├── execution/                ← output de EAA (JSON normalizado + manifiestos)
+│   └── analysis/                 ← output de ROA (Markdown estructurado)
+└── docs/
+    └── ata/                      ← documentación de la arquitectura ATA
+```
+
+> Las rutas de `/tests/` son valores por defecto. Los agentes usan los valores de
+> `STACK.yml → naming` si están definidos, ignorando los defaults.
+
+---
+
+## Glosario ATA
+
+| Término | Definición |
+|---------|-----------|
+| **ATA** | Arquitectura de Testing Agéntico — sistema de agentes de IA para pruebas de software |
+| **CCV** | Ciclo Cerrado de Validación — flujo obligatorio entre fases de prueba |
+| **ORCA** | Orchestrator Agent — agente que ejecuta el CCV completo de forma autónoma en una sola sesión |
+| **TGA** | Test Generation Agent — agente de diseño y generación de casos de prueba |
+| **EAA** | Execution & Analysis Agent — agente de ejecución y análisis de resultados |
+| **ROA** | Root-cause & Optimization Agent — agente de análisis de causa raíz y mejora |
+| **Handoff** | Transferencia estructurada de artefactos entre agentes (sesiones efímeras) |
+| **Sesión efímera** | Sesión de Copilot con estado aislado, activada por prefijo y descartada al cerrar |
+| **Fast-Path** | Modo de configuración rápida del Stack Setup que extrae valores de stack del prompt inicial sin entrevista |
+| **container_skills** | Sección de `STACK.yml` que declara runtimes y orquestadores de contenedores (Docker, Compose, Kubernetes) para EAA |

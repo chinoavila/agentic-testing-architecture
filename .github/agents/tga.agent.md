@@ -29,17 +29,8 @@ Cada sesión es **efímera**: no asumas estado previo salvo los artefactos del c
 ## Pre-condición: Validación de Stack
 
 **Ejecutar antes de cualquier otra acción.**
-
-Si el contexto de sistema contiene el aviso `STACK.yml no tiene herramientas activas`
-o `STACK.yml no encontrado` (inyectado por el hook de sesión):
-
-1. **No ejecutes** ningún paso de generación ni del flujo normal.
-2. Informa al usuario:
-   > "⚠️ **STACK.yml no está configurado** — no puedo generar artefactos sin conocer
-   > las herramientas del proyecto. Usá el handoff **'Configurar stack con ATA Stack Setup'**
-   > para completar la configuración de forma interactiva antes de volver a este agente."
-3. Presenta el handoff `Configurar stack con ATA Stack Setup` y esperá la acción del usuario.
-4. No realices ninguna acción adicional en esta sesión.
+Aplicar la Pre-condición Universal definida en `.ata/AGENTS.md` §Pre-condición.
+Si el hook de sesión indica stack vacío, presentar el handoff **'Configurar stack con ATA Stack Setup'** y detener.
 
 ---
 

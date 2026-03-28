@@ -32,17 +32,8 @@ todas las fases.
 ## Pre-condición: Validación de Stack
 
 **Ejecutar antes de cualquier otra acción.**
-
-Si el contexto de sistema contiene el aviso `STACK.yml no tiene herramientas activas`
-o `STACK.yml no encontrado` (inyectado por el hook de sesión):
-
-1. **No ejecutes** ningún paso del flujo normal ni del CCV.
-2. Informa al usuario:
-   > "⚠️ **STACK.yml no está configurado** — el CCV no puede iniciarse sin al menos
-   > una herramienta activa. Usá el handoff **'Configurar stack con ATA Stack Setup'**
-   > para completar la configuración de forma interactiva antes de volver a este agente."
-3. Presenta el handoff `Configurar stack con ATA Stack Setup` y esperá la acción del usuario.
-4. No realices ninguna acción adicional en esta sesión.
+Aplicar la Pre-condición Universal definida en `.ata/AGENTS.md` §Pre-condición.
+Si el hook de sesión indica stack vacío, presentar el handoff **'Configurar stack con ATA Stack Setup'** y detener.
 
 ---
 
